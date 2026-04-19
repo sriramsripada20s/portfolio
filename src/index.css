@@ -6,8 +6,8 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
-    background-color: #05050d;
-    color: #e6e6f0;
+    background-color: #f8f9fb;
+    color: #0f172a;
     font-family: 'Instrument Sans', sans-serif;
     overflow-x: hidden;
   }
