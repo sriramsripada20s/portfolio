@@ -131,7 +131,7 @@ export default function ProjectDetail() {
                         key={bi}
                         className="flex items-start gap-3 text-[13px] text-[#8892a4] leading-relaxed"
                       >
-                        <span className="text-sky-500 mt-0.5 flex-shrink-0">
+                        <span className="text-sky-500 mt-0.5 flex-shrink-0">&#8594;</span>
                           →
                         </span>
                         {b}
