@@ -68,16 +68,43 @@ export default function ProjectDetail() {
       {/* Main content grid */}
       <div className="grid md:grid-cols-3 gap-10">
 
-        {/* Left: long description */}
+        {/* Left: content */}
         <div className="md:col-span-2">
-          <h2 className="text-[20px] font-bold text-white mb-5">Overview</h2>
-          <div className="space-y-4">
-            {paragraphs.map((p, i) => (
-              <p key={i} className="text-[15px] text-[#8892a4] leading-[1.85]">{p}</p>
-            ))}
-          </div>
+          {project.sections ? (
+            <div className="space-y-10">
+              {project.sections.map((section, i) => (
+                <div key={i} className="border-l-2 border-sky-800/40 pl-6">
+                  <h3 className="text-[12px] font-bold text-sky-400 uppercase tracking-widest mb-3">
+                    {section.title}
+                  </h3>
+                  <p className="text-[14px] text-[#8892a4] leading-relaxed mb-4">
+                    {section.content}
+                  </p>
+                  {section.bullets && (
+                    <ul className="space-y-2">
+                      {section.bullets.map((b, bi) => (
+                        <li key={bi} className="flex items-start gap-3 text-[13px] text-[#8892a4] leading-relaxed">
+                          <span className="text-sky-500 mt-0.5 flex-shrink-0">→</span>
+                          {b}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div>
+              <h2 className="text-[20px] font-bold text-white mb-5">Overview</h2>
+              <div className="space-y-4">
+                {paragraphs.map((p, i) => (
+                  <p key={i} className="text-[15px] text-[#8892a4] leading-[1.85]">{p}</p>
+                ))}
+              </div>
+            </div>
+          )}
 
-          {/* Key highlights */}
+          {/* Key Results */}
           <div className="mt-10">
             <h2 className="text-[20px] font-bold text-white mb-5">Key Results</h2>
             <div className="grid grid-cols-1 gap-3">
@@ -147,12 +174,12 @@ export default function ProjectDetail() {
                 className="group bg-[#161b27] border border-[#232d3f] rounded-2xl overflow-hidden hover:border-sky-500/40 hover:-translate-y-1 transition-all duration-200 block">
                 <div className="p-5">
                   <div className="flex flex-wrap gap-1.5 mb-2">
-                    {p.domain.slice(0,1).map(d => (
+                    {p.domain.slice(0, 1).map(d => (
                       <span key={d} className="text-[10px] font-semibold px-2 py-0.5 rounded bg-sky-950/60 text-sky-400 border border-sky-800/30 uppercase tracking-wide">{d}</span>
                     ))}
                   </div>
                   <h3 className="text-[14px] font-bold text-white mb-1.5 group-hover:text-sky-400 transition-colors leading-snug">
-                    {p.title.split(' ').slice(0,5).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')}
+                    {p.title.split(' ').slice(0, 5).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')}
                   </h3>
                   <p className="text-[12px] text-[#6b7a96] leading-relaxed line-clamp-2">{p.description}</p>
                 </div>
