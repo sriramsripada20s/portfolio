@@ -1,7 +1,13 @@
 export interface ProjectSection {
   title: string;
-  content: string;
+  content?: string;
   bullets?: string[];
+}
+
+export interface ProjectTab {
+  label: string;
+  icon?: string;
+  sections: ProjectSection[];
 }
 
 export interface Project {
@@ -13,6 +19,7 @@ export interface Project {
   description: string;
   longDescription: string;
   sections?: ProjectSection[];
+  tabs?: ProjectTab[];
   tech: string[];
   metrics: { label: string; value: string; color: 'cyan' | 'orange' | 'violet' | 'yellow' }[];
   githubUrl?: string;
