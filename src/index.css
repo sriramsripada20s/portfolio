@@ -68,3 +68,7 @@
   transform: translateY(-4px);
   border-color: #00f0d480;
 }
+body {
+  background-color: #f8f9fb !important;
+  color: #0f172a !important;
+}
