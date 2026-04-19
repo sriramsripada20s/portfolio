@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Github } from 'lucide-react';
 
 const links = [
   { to: '/', label: 'Projects' },
@@ -35,7 +35,6 @@ export default function Navbar() {
           SR<span className="text-sky-500">.</span>
         </Link>
 
-        {/* Desktop */}
         <div className="hidden md:flex items-center gap-8">
           {links.map(l => (
             <Link
@@ -50,17 +49,16 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
-          
+          <a
             href="https://github.com/sriramsripada20s"
             target="_blank"
             rel="noreferrer"
-            className="font-mono-custom text-[11px] tracking-[2px] uppercase text-sky-500 border border-sky-200 px-4 py-2 rounded-sm hover:bg-sky-50 transition-all"
+            className="flex items-center gap-1.5 font-mono-custom text-[11px] tracking-[2px] uppercase text-sky-500 border border-sky-200 px-4 py-2 rounded-sm hover:bg-sky-50 transition-all"
           >
-            GitHub
+            <Github size={12} /> GitHub
           </a>
         </div>
 
-        {/* Mobile hamburger */}
         <button
           className="md:hidden text-slate-400 hover:text-slate-900"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -69,7 +67,6 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu */}
       {menuOpen && (
         <div className="md:hidden bg-white border-t border-slate-100 px-6 py-6 flex flex-col gap-6">
           {links.map(l => (
@@ -83,13 +80,13 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
-          
+          <a
             href="https://github.com/sriramsripada20s"
             target="_blank"
             rel="noreferrer"
-            className="font-mono-custom text-[12px] tracking-[2px] uppercase text-sky-500"
+            className="flex items-center gap-1.5 font-mono-custom text-[12px] tracking-[2px] uppercase text-sky-500"
           >
-            GitHub
+            <Github size={12} /> GitHub
           </a>
         </div>
       )}
