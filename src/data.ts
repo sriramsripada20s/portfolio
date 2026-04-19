@@ -37,24 +37,84 @@ export const PROJECTS: Project[] = [
     featured: true,
     year: '2024',
   },
+  sections: [
   {
-    id: '3',
-    slug: 'customer-360-dbt-snowflake',
-    title: 'CUSTOMER 360 PLATFORM',
-    subtitle: 'dbt medallion architecture on Snowflake — 5M+ daily records',
-    domain: ['Data Engineering', 'Analytics'],
-    description: 'End-to-end customer segmentation and RFM analytics platform. dbt medallion architecture processes 5M+ daily records on Snowflake with full data contracts, 263 automated tests, composite scoring, and CI/CD via GitHub Actions.',
-    longDescription: `A fintech neobank serving 50,000+ customers had data sitting in silos. Transactions, sessions, campaigns, and orders never talked to each other — resulting in generic marketing, reactive fraud detection, and no unified customer view.\n\nThe goal was to build a single platform answering three questions: Who are our most valuable customers? Who is about to churn? Which transactions look fraudulent?\n\nARCHITECTURE — 5-layer medallion on Snowflake: RAW (S3 via Snowpipe) → STAGING (cleaned, deduplicated) → INTERMEDIATE (business joins, ephemeral) → MART (analytics-ready facts and dims) → FEATURES (ML-ready normalized tables). All layers managed by dbt with full data contracts and incremental loading.\n\nDATA SOURCES — 7 source tables: customers, orders, order_items, transactions, events, campaigns, products. Ingested via Snowpipe with Streams + Tasks for near-real-time CDC updates to staging.\n\nDBT MODELS — 22 models, 263 automated tests. Staging cleans one source each using QUALIFY ROW_NUMBER() deduplication. Five ephemeral intermediate models compute RFM metrics, fraud signals, session features, payment signals, and product affinity. Mart layer produces dim_customers, fct_orders, and the core fct_customer_value table — one row per customer joining all 5 intermediate models into a unified profile.\n\nCUSTOMER 360 OUTPUT — fct_customer_value combines RFM metrics, digital behavior, product affinity, campaign engagement, payment signals, and 7 fraud risk flags into three composite SQL scores: customer_value_score (0–100), churn_risk_score (0–100), and personalization_score (0–100).\n\nDATA QUALITY — 263 tests covering not_null, unique, accepted_values, relationships across all models plus custom singular tests including assert_no_duplicate_customers and assert_no_negative_revenue.\n\nCI/CD — GitHub Actions pipeline runs on every push and PR: installs dbt, writes profiles.yml securely from GitHub Secrets, runs dbt compile to catch syntax errors, then builds all 4 layers sequentially with full test execution. Any failure blocks the merge. Artifacts saved 7 days for debugging.`,
-    tech: ['dbt', 'Snowflake', 'Snowpipe', 'GitHub Actions', 'Python', 'Snowpark ML', 'Sigma', 'Power BI'],
-    metrics: [
-      { label: 'Daily Records Processed', value: '5M+', color: 'cyan' },
-      { label: 'dbt Models', value: '22', color: 'orange' },
-      { label: 'Automated Tests', value: '263', color: 'violet' },
-      { label: 'Composite Scores', value: '3', color: 'yellow' },
-    ],
-    featured: true,
-    year: '2024',
+    title: 'The Business Problem',
+    content: 'A fintech neobank serving 50,000+ customers had data sitting in silos. Transactions, sessions, campaigns, and orders never talked to each other — resulting in generic marketing, reactive fraud detection, and no unified customer view.',
+    bullets: [
+      'No unified view of who each customer was',
+      'Generic marketing sent to all customers equally',
+      'Fraud discovered after the money was already lost',
+      'Every team working from different numbers',
+    ]
   },
+  {
+    title: 'Architecture',
+    content: '5-layer medallion architecture on Snowflake — each layer with a clear purpose and strict contracts.',
+    bullets: [
+      'RAW — raw data landed from S3 via Snowpipe, untouched',
+      'STAGING — cleaned, deduplicated, standardized with no business logic',
+      'INTERMEDIATE — business joins and aggregations as ephemeral models',
+      'MART — analytics-ready fact and dimension tables',
+      'FEATURES — ML-ready normalized feature tables for Snowpark',
+    ]
+  },
+  {
+    title: 'Data Sources',
+    content: '7 source tables ingested into Snowflake RAW via Snowpipe with Streams + Tasks for near-real-time CDC updates.',
+    bullets: [
+      'customers — demographics, loyalty tier, signup date',
+      'orders — purchase history, channel, order status',
+      'order_items — product-level detail, categories, discounts',
+      'transactions — payment events, device, location',
+      'events — clickstream sessions, product views, cart activity',
+      'campaigns — email/push/SMS responses and conversions',
+      'products — catalog, pricing, category hierarchy',
+    ]
+  },
+  {
+    title: 'dbt Models — 22 Models, 263 Tests',
+    content: 'Built across 4 layers with full data contracts, column-level docs, and incremental loading patterns.',
+    bullets: [
+      'Staging (7 models) — one model per source, QUALIFY ROW_NUMBER() deduplication, type casting, null handling',
+      'Intermediate (5 ephemeral) — RFM metrics, fraud signals, session features, payment signals, product affinity',
+      'Mart (3 tables) — dim_customers, fct_orders, fct_customer_value (the Customer 360 table)',
+      'Features (2 incremental) — feat_customer_segmentation and feat_fraud_behavior for ML',
+    ]
+  },
+  {
+    title: 'Customer 360 Output',
+    content: 'fct_customer_value is the centrepiece — one row per customer combining all signals into three composite scores.',
+    bullets: [
+      'customer_value_score (0–100) — Recency 25pts + Frequency 25pts + Monetary 30pts + Engagement 20pts',
+      'churn_risk_score (0–100) — Recency decline + Frequency drop + Discount dependency + Payment failures',
+      'personalization_score (0–100) — How well the platform knows this customer across all data points',
+      '7 fraud risk flags — geo velocity, rapid transactions, multiple cards, high chargebacks, and more',
+    ]
+  },
+  {
+    title: 'Data Quality',
+    content: '263 automated tests run on every build — no model reaches production without passing.',
+    bullets: [
+      'not_null and unique on all primary keys across every model',
+      'accepted_values on status fields, loyalty tiers, device types, payment methods',
+      'relationships tests ensuring referential integrity across dims and facts',
+      'Custom singular tests: assert_no_duplicate_customers, assert_no_negative_revenue',
+    ]
+  },
+  {
+    title: 'CI/CD Pipeline',
+    content: 'GitHub Actions pipeline runs automatically on every push and pull request.',
+    bullets: [
+      'Installs dbt-snowflake and runs dbt deps on every trigger',
+      'Writes profiles.yml securely from GitHub Secrets — no credentials in code',
+      'Runs dbt compile first to catch syntax and ref errors without hitting Snowflake',
+      'Builds all 4 layers sequentially — staging → intermediate → marts → features',
+      'All 263 tests run automatically — any failure blocks the merge',
+      'Artifacts (manifest.json, run_results.json) saved 7 days for debugging',
+    ]
+  },
+],
   {
     id: '4',
     slug: 'churn-prediction-model',
