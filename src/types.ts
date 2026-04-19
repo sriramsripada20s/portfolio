@@ -1,3 +1,9 @@
+export interface ProjectSection {
+  title: string;
+  content: string;
+  bullets?: string[];
+}
+
 export interface Project {
   id: string;
   slug: string;
@@ -6,6 +12,7 @@ export interface Project {
   domain: string[];
   description: string;
   longDescription: string;
+  sections?: ProjectSection[];
   tech: string[];
   metrics: { label: string; value: string; color: 'cyan' | 'orange' | 'violet' | 'yellow' }[];
   githubUrl?: string;
