@@ -21,11 +21,18 @@ export default function Navbar() {
   useEffect(() => { setMenuOpen(false); }, [location]);
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#05050d]/90 backdrop-blur-xl border-b border-[#181828]' : ''}`}
-      style={{ padding: scrolled ? '14px 48px' : '24px 48px' }}>
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-white/95 backdrop-blur-xl border-b border-slate-200'
+          : 'bg-white/80 backdrop-blur-sm'
+      }`}
+      style={{ padding: scrolled ? '14px 48px' : '24px 48px' }}
+    >
       <div className="flex justify-between items-center max-w-7xl mx-auto">
-        <Link to="/" className="font-display text-xl tracking-widest text-white hover:text-cyan transition-colors">
-          SR<span className="text-cyan">.</span>
+
+        <Link to="/" className="font-display text-xl tracking-widest text-slate-900 hover:text-sky-500 transition-colors">
+          SR<span className="text-sky-500">.</span>
         </Link>
 
         {/* Desktop */}
@@ -34,39 +41,55 @@ export default function Navbar() {
             <Link
               key={l.to}
               to={l.to}
-              className={`font-mono-custom text-[11px] tracking-[3px] uppercase transition-colors ${location.pathname === l.to ? 'text-cyan' : 'text-muted hover:text-white'}`}
+              className={`font-mono-custom text-[11px] tracking-[3px] uppercase transition-colors ${
+                location.pathname === l.to
+                  ? 'text-sky-500'
+                  : 'text-slate-400 hover:text-slate-900'
+              }`}
             >
               {l.label}
             </Link>
           ))}
-          <a
+          
             href="https://github.com/sriramsripada20s"
             target="_blank"
             rel="noreferrer"
-            className="font-mono-custom text-[11px] tracking-[2px] uppercase text-cyan border border-cyan/40 px-4 py-2 rounded-sm hover:bg-cyan/10 transition-all"
+            className="font-mono-custom text-[11px] tracking-[2px] uppercase text-sky-500 border border-sky-200 px-4 py-2 rounded-sm hover:bg-sky-50 transition-all"
           >
-            GitHub ↗
+            GitHub
           </a>
         </div>
 
         {/* Mobile hamburger */}
-        <button className="md:hidden text-muted hover:text-white" onClick={() => setMenuOpen(!menuOpen)}>
+        <button
+          className="md:hidden text-slate-400 hover:text-slate-900"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden bg-[#0b0b16] border-t border-[#181828] px-6 py-6 flex flex-col gap-6">
+        <div className="md:hidden bg-white border-t border-slate-100 px-6 py-6 flex flex-col gap-6">
           {links.map(l => (
-            <Link key={l.to} to={l.to}
-              className={`font-mono-custom text-[12px] tracking-[3px] uppercase ${location.pathname === l.to ? 'text-cyan' : 'text-muted'}`}>
+            <Link
+              key={l.to}
+              to={l.to}
+              className={`font-mono-custom text-[12px] tracking-[3px] uppercase ${
+                location.pathname === l.to ? 'text-sky-500' : 'text-slate-400'
+              }`}
+            >
               {l.label}
             </Link>
           ))}
-          <a href="https://github.com/sriramsripada20s" target="_blank" rel="noreferrer"
-            className="font-mono-custom text-[12px] tracking-[2px] uppercase text-cyan">
-            GitHub ↗
+          
+            href="https://github.com/sriramsripada20s"
+            target="_blank"
+            rel="noreferrer"
+            className="font-mono-custom text-[12px] tracking-[2px] uppercase text-sky-500"
+          >
+            GitHub
           </a>
         </div>
       )}
