@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Github, ExternalLink } from 'lucide-react';
 import { PROJECTS } from '../data';
@@ -13,6 +14,7 @@ export default function ProjectDetail() {
   const { slug } = useParams<{ slug: string }>();
   const project = PROJECTS.find(p => p.slug === slug);
   const others = PROJECTS.filter(p => p.slug !== slug).slice(0, 3);
+  const [activeTab, setActiveTab] = useState(0);
 
   if (!project) {
     return (
@@ -25,7 +27,14 @@ export default function ProjectDetail() {
     );
   }
 
-  const paragraphs = project.longDescription.split('\n\n').filter(Boolean);
+  const tabs = project.tabs ?? [
+    {
+      label: 'Overview',
+      sections: project.sections ?? [
+        { title: 'Overview', content: project.longDescription, bullets: [] }
+      ]
+    }
+  ];
 
   return (
     <div className="min-h-screen pt-24 pb-24 px-6 md:px-12 max-w-6xl mx-auto">
@@ -35,7 +44,7 @@ export default function ProjectDetail() {
         <ArrowLeft size={14} /> All Projects
       </Link>
 
-      {/* Domain tags + meta */}
+      {/* Domain tags */}
       <div className="flex flex-wrap gap-2 mb-4">
         {project.domain.map(d => (
           <span key={d} className="text-[11px] font-semibold px-3 py-1 rounded-md bg-sky-950/60 text-sky-400 border border-sky-800/30 tracking-wide uppercase">{d}</span>
@@ -47,111 +56,118 @@ export default function ProjectDetail() {
       </div>
 
       {/* Title */}
-      <h1 className="text-[clamp(28px,4vw,46px)] font-bold text-white leading-tight mb-3">
+      <h1 className="text-[clamp(28px,4vw,46px)] font-bold text-white leading-tight mb-2">
         {project.title.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')}
       </h1>
-      <p className="text-[16px] text-sky-400 font-medium mb-10">{project.subtitle}</p>
+      <p className="text-[15px] text-sky-400 font-medium mb-8">{project.subtitle}</p>
 
-      {/* Metrics grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+      {/* Metrics */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         {project.metrics.map((m, i) => {
           const c = metricColor[m.color] ?? metricColor.cyan;
           return (
             <div key={i} className={`${c.bg} border ${c.border} rounded-2xl p-5`}>
-              <div className={`text-[30px] font-bold leading-none mb-1 ${c.text}`}>{m.value}</div>
+              <div className={`text-[28px] font-bold leading-none mb-1 ${c.text}`}>{m.value}</div>
               <div className="text-[11px] text-[#6b7a96] font-medium uppercase tracking-wider">{m.label}</div>
             </div>
           );
         })}
       </div>
 
-      {/* Main content grid */}
+      {/* Tab bar */}
+      <div className="flex items-center gap-1 border-b border-[#232d3f] mb-10 overflow-x-auto">
+        {tabs.map((tab, i) => (
+          <button
+            key={i}
+            onClick={() => setActiveTab(i)}
+            className={`flex items-center gap-2 px-5 py-3 text-[13px] font-semibold whitespace-nowrap border-b-2 transition-all -mb-px ${
+              activeTab === i
+                ? 'border-sky-400 text-white'
+                : 'border-transparent text-[#6b7a96] hover:text-white'
+            }`}
+          >
+            {tab.icon && <span className="text-[14px]">{tab.icon}</span>}
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Main content */}
       <div className="grid md:grid-cols-3 gap-10">
 
-        {/* Left: content */}
+        {/* Tab content */}
         <div className="md:col-span-2">
-          {project.sections ? (
-            <div className="space-y-10">
-              {project.sections.map((section, i) => (
-                <div key={i} className="border-l-2 border-sky-800/40 pl-6">
-                  <h3 className="text-[12px] font-bold text-sky-400 uppercase tracking-widest mb-3">
-                    {section.title}
-                  </h3>
+          <div className="space-y-10">
+            {tabs[activeTab]?.sections.map((section, i) => (
+              <div key={i} className="border-l-2 border-sky-800/40 pl-6">
+                <h3 className="text-[11px] font-bold text-sky-400 uppercase tracking-widest mb-3">
+                  {section.title}
+                </h3>
+                {section.content && (
                   <p className="text-[14px] text-[#8892a4] leading-relaxed mb-4">
                     {section.content}
                   </p>
-                  {section.bullets && (
-                    <ul className="space-y-2">
-                      {section.bullets.map((b, bi) => (
-                        <li key={bi} className="flex items-start gap-3 text-[13px] text-[#8892a4] leading-relaxed">
-                          <span className="text-sky-500 mt-0.5 flex-shrink-0">→</span>
-                          {b}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div>
-              <h2 className="text-[20px] font-bold text-white mb-5">Overview</h2>
-              <div className="space-y-4">
-                {paragraphs.map((p, i) => (
-                  <p key={i} className="text-[15px] text-[#8892a4] leading-[1.85]">{p}</p>
-                ))}
+                )}
+                {section.bullets && section.bullets.length > 0 && (
+                  <ul className="space-y-2.5">
+                    {section.bullets.map((b, bi) => (
+                      <li key={bi} className="flex items-start gap-3 text-[13px] text-[#8892a4] leading-relaxed">
+                        <span className="text-sky-500 mt-0.5 flex-shrink-0">→</span>
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
-            </div>
-          )}
+            ))}
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <div className="flex flex-col gap-6">
 
           {/* Key Results */}
-          <div className="mt-10">
-            <h2 className="text-[20px] font-bold text-white mb-5">Key Results</h2>
-            <div className="grid grid-cols-1 gap-3">
+          <div className="bg-[#161b27] border border-[#232d3f] rounded-2xl p-6">
+            <h3 className="text-[11px] font-semibold text-sky-400 tracking-widest uppercase mb-4">Key Results</h3>
+            <div className="flex flex-col gap-3">
               {project.metrics.map((m, i) => {
                 const c = metricColor[m.color] ?? metricColor.cyan;
                 return (
-                  <div key={i} className="flex items-center gap-4 bg-[#161b27] border border-[#232d3f] rounded-xl px-5 py-4">
-                    <div className={`text-[22px] font-bold min-w-[80px] ${c.text}`}>{m.value}</div>
-                    <div className="text-[14px] text-[#8892a4]">{m.label}</div>
+                  <div key={i} className="flex items-center gap-3">
+                    <div className={`text-[18px] font-bold min-w-[60px] ${c.text}`}>{m.value}</div>
+                    <div className="text-[12px] text-[#6b7a96]">{m.label}</div>
                   </div>
                 );
               })}
             </div>
           </div>
-        </div>
-
-        {/* Right sidebar */}
-        <div className="flex flex-col gap-8">
 
           {/* Tech stack */}
           <div className="bg-[#161b27] border border-[#232d3f] rounded-2xl p-6">
-            <h3 className="text-[12px] font-semibold text-sky-400 tracking-widest uppercase mb-4">Tech Stack</h3>
+            <h3 className="text-[11px] font-semibold text-sky-400 tracking-widest uppercase mb-4">Tech Stack</h3>
             <div className="flex flex-wrap gap-2">
               {project.tech.map(t => (
-                <span key={t} className="text-[12px] px-3 py-1.5 rounded-lg border border-[#232d3f] text-[#8892a4] bg-[#0f1117]">{t}</span>
+                <span key={t} className="text-[11px] px-3 py-1.5 rounded-lg border border-[#232d3f] text-[#8892a4] bg-[#0f1117]">{t}</span>
               ))}
             </div>
           </div>
 
           {/* Links */}
           <div className="bg-[#161b27] border border-[#232d3f] rounded-2xl p-6">
-            <h3 className="text-[12px] font-semibold text-sky-400 tracking-widest uppercase mb-4">Links</h3>
-            <div className="flex flex-col gap-3">
-              {project.githubUrl ? (
-                <a href={project.githubUrl} target="_blank" rel="noreferrer"
-                  className="flex items-center gap-2.5 text-[13px] text-white hover:text-sky-400 transition-colors font-medium">
-                  <Github size={15} /> View on GitHub <ExternalLink size={11} className="text-[#6b7a96] ml-auto" />
-                </a>
-              ) : (
-                <p className="text-[13px] text-[#6b7a96]">Internal production project — no public repo.</p>
-              )}
-            </div>
+            <h3 className="text-[11px] font-semibold text-sky-400 tracking-widest uppercase mb-4">Links</h3>
+            {project.githubUrl ? (
+              <a href={project.githubUrl} target="_blank" rel="noreferrer"
+                className="flex items-center gap-2.5 text-[13px] text-white hover:text-sky-400 transition-colors font-medium">
+                <Github size={15} /> View on GitHub <ExternalLink size={11} className="text-[#6b7a96] ml-auto" />
+              </a>
+            ) : (
+              <p className="text-[13px] text-[#6b7a96]">Internal production project — no public repo.</p>
+            )}
           </div>
 
           {/* Domain */}
           <div className="bg-[#161b27] border border-[#232d3f] rounded-2xl p-6">
-            <h3 className="text-[12px] font-semibold text-sky-400 tracking-widest uppercase mb-4">Domain</h3>
+            <h3 className="text-[11px] font-semibold text-sky-400 tracking-widest uppercase mb-4">Domain</h3>
             <div className="flex flex-wrap gap-2">
               {project.domain.map(d => (
                 <span key={d} className="text-[12px] px-3 py-1.5 rounded-lg bg-sky-950/60 text-sky-400 border border-sky-800/30">{d}</span>
@@ -171,7 +187,8 @@ export default function ProjectDetail() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {others.map(p => (
               <Link key={p.id} to={`/projects/${p.slug}`}
-                className="group bg-[#161b27] border border-[#232d3f] rounded-2xl overflow-hidden hover:border-sky-500/40 hover:-translate-y-1 transition-all duration-200 block">
+                className="group bg-[#161b27] border border-[#232d3f] rounded-2xl overflow-hidden hover:border-sky-500/40 hover:-translate-y-1 transition-all duration-200 block"
+                onClick={() => setActiveTab(0)}>
                 <div className="p-5">
                   <div className="flex flex-wrap gap-1.5 mb-2">
                     {p.domain.slice(0, 1).map(d => (
@@ -180,14 +197,3 @@ export default function ProjectDetail() {
                   </div>
                   <h3 className="text-[14px] font-bold text-white mb-1.5 group-hover:text-sky-400 transition-colors leading-snug">
                     {p.title.split(' ').slice(0, 5).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')}
-                  </h3>
-                  <p className="text-[12px] text-[#6b7a96] leading-relaxed line-clamp-2">{p.description}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
