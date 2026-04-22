@@ -26,7 +26,7 @@ export const PROJECTS: Project[] = [
         sections: [
           {
             title: 'The Problem',
-            content: 'Financial fraud costs billions annually. Legacy rule-based systems catch known patterns but miss novel attack vectors. MyBambu needed a real-time ML system that learns from transaction behavior and flags suspicious activity before money leaves the account.',
+            content: 'Financial fraud costs billions annually. Legacy rule-based systems catch known patterns but miss novel attack vectors. Bank needed a real-time ML system that learns from transaction behavior and flags suspicious activity before money leaves the account.',
             bullets: [
               'Rule-based systems missing novel fraud patterns',
               'No real-time scoring — fraud detected hours after the fact',
@@ -108,7 +108,7 @@ export const PROJECTS: Project[] = [
         sections: [
           {
             title: 'Production Impact',
-            content: 'Deployed to production at MyBambu with measurable impact on fraud operations and engineering efficiency.',
+            content: 'Deployed to production at Bank with measurable impact on fraud operations and engineering efficiency.',
             bullets: [
               '$4.2M in high-risk transactions flagged across 28K+ scored transactions',
               '40% reduction in manual retraining effort through automated MLflow pipelines',
@@ -153,7 +153,7 @@ export const PROJECTS: Project[] = [
         sections: [
           {
             title: 'The Problem',
-            content: 'Business teams at MyBambu waited days for data requests. The analytics team was a bottleneck — every question about churn, revenue, or fraud required a ticket, a query, and a dashboard. Non-technical stakeholders had no way to self-serve.',
+            content: 'Business teams at Bank waited days for data requests. The analytics team was a bottleneck — every question about churn, revenue, or fraud required a ticket, a query, and a dashboard. Non-technical stakeholders had no way to self-serve.',
             bullets: [
               'Every business question required an analyst to write SQL',
               'Insight turnaround averaging 2-3 days per request',
@@ -206,7 +206,7 @@ export const PROJECTS: Project[] = [
         sections: [
           {
             title: 'Business Impact',
-            content: 'Deployed to 4+ business teams at MyBambu — product, finance, operations, and marketing.',
+            content: 'Deployed to 4+ business teams at Bank — product, finance, operations, and marketing.',
             bullets: [
               '65% reduction in insight turnaround — from days to seconds',
               '4+ teams unblocked from analytics bottleneck',
@@ -352,6 +352,53 @@ export const PROJECTS: Project[] = [
           },
         ],
       },
+      {
+        label: 'Semantic Layer',
+        icon: '🧠',
+        sections: [
+          {
+            title: 'Why a Semantic Layer',
+            content: 'Without a semantic layer, every team writes their own SQL to calculate revenue or churn rate — resulting in inconsistent numbers across dashboards. The semantic layer defines metrics once and every tool consumes the same definitions.',
+            bullets: [
+              'Marketing calculating churn differently from Finance — eliminated',
+              'Every dashboard querying raw fct_customer_value directly — replaced with canonical metrics',
+              'Cortex AI Agent needed structured metric context for accurate NL to SQL — solved',
+              'Power BI and Sigma needed a single queryable interface — provided',
+            ],
+          },
+          {
+            title: 'MetricFlow — dbt Semantic Layer',
+            content: 'Defined 18 metrics in dbt MetricFlow across 3 files in models/metrics/ — semantic model, metric definitions, and time spine.',
+            bullets: [
+              'semantic_models.yml — entities, dimensions, and measures built on fct_customer_value',
+              'metrics.yml — 18 canonical metrics with labels: total_customers, churn_rate, avg_customer_value_score, revenue_per_active_customer and more',
+              'metricflow_time_spine.sql — Snowflake GENERATOR-based date spine from 2020 to 2030, no dbt_utils dependency',
+              'Ratio metrics — churn_rate = high_risk_customers / active_customers, revenue_per_active_customer = total_revenue / active_customers',
+            ],
+          },
+          {
+            title: 'Snowflake Semantic View',
+            content: 'Built a Snowflake native Semantic View (CUSTOMER_METRICS) on top of materialized mart tables — directly queryable by Power BI, Sigma, and the Cortex AI Agent without dbt Cloud.',
+            bullets: [
+              'CUSTOMER_PLATFORM.MART.CUSTOMER_METRICS — semantic view with facts, dimensions, and metrics',
+              'Debugged CTE alias conflict — fct_customer_value view used short alias that caused Snowflake identifier resolution failure',
+              'Fixed by materializing fct_customer_value and dim_customers as tables in MART schema',
+              '18 metrics queryable directly — total_customers, churn_rate, avg_churn_risk_score, revenue_per_customer and more',
+              'Power BI and Sigma connect via Snowflake connector — no extract, always live',
+            ],
+          },
+          {
+            title: 'Key Engineering Decision',
+            content: 'Chose Snowflake Semantic View over dbt Cloud Semantic Layer API — pragmatic decision based on existing stack and cost.',
+            bullets: [
+              'dbt Cloud Semantic Layer requires paid subscription — not needed for current stack',
+              'Snowflake Semantic View is free, native, and directly consumable by all BI tools',
+              'MetricFlow YAML retained for documentation, lineage, and dbt docs visibility',
+              'Cortex AI Agent pointed at CUSTOMER_METRICS semantic view for better NL to SQL accuracy',
+            ],
+          },
+        ],
+      },
     ],
   },
   {
@@ -377,7 +424,7 @@ export const PROJECTS: Project[] = [
         sections: [
           {
             title: 'The Problem',
-            content: 'MyBambu was losing customers silently. By the time churn was detected — when a customer stopped transacting — it was too late for retention. The business needed early warning: predict churn 30 days before it happens.',
+            content: 'Bank was losing customers silently. By the time churn was detected — when a customer stopped transacting — it was too late for retention. The business needed early warning: predict churn 30 days before it happens.',
             bullets: [
               'No early warning system for at-risk customers',
               'Retention campaigns sent reactively after churn, not before',
@@ -527,7 +574,7 @@ export const PROJECTS: Project[] = [
     subtitle: 'Sigma + Power BI dashboards with RLS and live Snowflake queries',
     domain: ['BI', 'Analytics'],
     description: 'Suite of executive and operational dashboards built in Sigma Computing and Power BI. Live queries against Snowflake Gold tables with row-level security, DAX measures, and 30% performance improvement over legacy reports.',
-    longDescription: `Modern BI layer replacing legacy Excel reporting at MyBambu.`,
+    longDescription: `Modern BI layer replacing legacy Excel reporting at Bank.`,
     tech: ['Sigma Computing', 'Power BI', 'DAX', 'Snowflake', 'SQL', 'dbt Metrics'],
     metrics: [
       { label: 'Dashboard Performance', value: '+30%', color: 'cyan' },
@@ -543,7 +590,7 @@ export const PROJECTS: Project[] = [
         sections: [
           {
             title: 'The Problem',
-            content: 'MyBambu relied on Excel-based reporting — stale data, manual refreshes, and no role-based access control. Executives and operations teams had no real-time visibility into the business.',
+            content: 'Bank relied on Excel-based reporting — stale data, manual refreshes, and no role-based access control. Executives and operations teams had no real-time visibility into the business.',
             bullets: [
               'Excel reports refreshed manually — data always hours or days stale',
               'No row-level security — everyone saw everything',
