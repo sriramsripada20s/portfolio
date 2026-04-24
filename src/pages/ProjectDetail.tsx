@@ -97,30 +97,72 @@ export default function ProjectDetail() {
 
         {/* Tab content */}
         <div className="md:col-span-2">
-          <div className="space-y-10">
-            {tabs[activeTab]?.sections.map((section, i) => (
-              <div key={i} className="border-l-2 border-sky-800/40 pl-6">
+          {tabs[activeTab]?.label === 'Live Demo' ? (
+            <div className="space-y-6">
+              <div className="border-l-2 border-sky-800/40 pl-6">
                 <h3 className="text-[11px] font-bold text-sky-400 uppercase tracking-widest mb-3">
-                  {section.title}
+                  Live Portfolio Dashboard
                 </h3>
-                {section.content && (
-                  <p className="text-[14px] text-[#8892a4] leading-relaxed mb-4">
-                    {section.content}
-                  </p>
-                )}
-                {section.bullets && section.bullets.length > 0 && (
-                  <ul className="space-y-2.5">
-                    {section.bullets.map((b, bi) => (
-                      <li key={bi} className="flex items-start gap-3 text-[13px] text-[#8892a4] leading-relaxed">
-                        <span className="text-sky-500 mt-0.5 flex-shrink-0">→</span>
-                        {b}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <p className="text-[14px] text-[#8892a4] leading-relaxed mb-4">
+                  Real production metrics pulled from Snowflake daily via GitHub Actions. Updates automatically at 6 AM UTC — zero live Snowflake hits on page load.
+                </p>
+                <ul className="space-y-2.5 mb-6">
+                  {[
+                    'Real Snowflake data — 50,000 customers, $224M revenue tracked',
+                    'Auto-updates daily — GitHub Actions queries Snowflake once, writes static JSON',
+                    'Zero live Snowflake hits on page load — static file pattern for performance',
+                    '4 metric tabs — Customer, Revenue, Risk & Fraud, Engagement',
+                  ].map((b, bi) => (
+                    <li key={bi} className="flex items-start gap-3 text-[13px] text-[#8892a4] leading-relaxed">
+                      <span className="text-sky-500 mt-0.5 flex-shrink-0">→</span>{b}
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href="https://sriramsripada20s.github.io/customer-360-snowflake-dbt"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 text-[13px] font-semibold text-sky-400 border border-sky-800/40 bg-sky-950/50 px-4 py-2.5 rounded-lg hover:bg-sky-900/40 transition-colors mb-6"
+                >
+                  <ExternalLink size={13} /> Open live dashboard ↗
+                </a>
               </div>
-            ))}
-          </div>
+              <div className="rounded-xl overflow-hidden border border-[#232d3f]" style={{ height: '600px' }}>
+                <iframe
+                  src="https://sriramsripada20s.github.io/customer-360-snowflake-dbt"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 'none', background: '#080C10' }}
+                  title="Customer 360 Live Dashboard"
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-10">
+              {tabs[activeTab]?.sections.map((section, i) => (
+                <div key={i} className="border-l-2 border-sky-800/40 pl-6">
+                  <h3 className="text-[11px] font-bold text-sky-400 uppercase tracking-widest mb-3">
+                    {section.title}
+                  </h3>
+                  {section.content && (
+                    <p className="text-[14px] text-[#8892a4] leading-relaxed mb-4">
+                      {section.content}
+                    </p>
+                  )}
+                  {section.bullets && section.bullets.length > 0 && (
+                    <ul className="space-y-2.5">
+                      {section.bullets.map((b, bi) => (
+                        <li key={bi} className="flex items-start gap-3 text-[13px] text-[#8892a4] leading-relaxed">
+                          <span className="text-sky-500 mt-0.5 flex-shrink-0">→</span>
+                          {b}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Sidebar */}
@@ -155,14 +197,24 @@ export default function ProjectDetail() {
           {/* Links */}
           <div className="bg-[#161b27] border border-[#232d3f] rounded-2xl p-6">
             <h3 className="text-[11px] font-semibold text-sky-400 tracking-widest uppercase mb-4">Links</h3>
-            {project.githubUrl ? (
-              <a href={project.githubUrl} target="_blank" rel="noreferrer"
-                className="flex items-center gap-2.5 text-[13px] text-white hover:text-sky-400 transition-colors font-medium">
-                <Github size={15} /> View on GitHub <ExternalLink size={11} className="text-[#6b7a96] ml-auto" />
-              </a>
-            ) : (
-              <p className="text-[13px] text-[#6b7a96]">Internal production project — no public repo.</p>
-            )}
+            <div className="flex flex-col gap-3">
+              {project.liveUrl && (
+                <a href={project.liveUrl} target="_blank" rel="noreferrer"
+                  className="flex items-center gap-2.5 text-[13px] text-white hover:text-sky-400 transition-colors font-medium">
+                  <ExternalLink size={15} /> Live Dashboard
+                  <ExternalLink size={11} className="text-[#6b7a96] ml-auto" />
+                </a>
+              )}
+              {project.githubUrl ? (
+                <a href={project.githubUrl} target="_blank" rel="noreferrer"
+                  className="flex items-center gap-2.5 text-[13px] text-white hover:text-sky-400 transition-colors font-medium">
+                  <Github size={15} /> View on GitHub
+                  <ExternalLink size={11} className="text-[#6b7a96] ml-auto" />
+                </a>
+              ) : (
+                <p className="text-[13px] text-[#6b7a96]">Internal production project — no public repo.</p>
+              )}
+            </div>
           </div>
 
           {/* Domain */}
