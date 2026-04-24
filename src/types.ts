@@ -23,6 +23,7 @@ export interface Project {
   tech: string[];
   metrics: { label: string; value: string; color: 'cyan' | 'orange' | 'violet' | 'yellow' }[];
   githubUrl?: string;
+  liveUrl?: string;
   featured: boolean;
   year: string;
 }
