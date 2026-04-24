@@ -148,6 +148,17 @@ export const PROJECTS: Project[] = [
         ],
       },
       {
+        label: 'One-Pager',
+        icon: '📄',
+        sections: [
+          {
+            title: 'Architecture One-Pager',
+            content: 'Full system architecture, data flow, key recommendations, and business impact summary.',
+            bullets: [],
+          },
+        ],
+      },
+      {
         label: 'Live Demo',
         icon: '🌐',
         sections: [
@@ -248,6 +259,17 @@ export const PROJECTS: Project[] = [
               '92% NL query accuracy on business questions',
               'Analyst team freed from ad-hoc requests to focus on strategic work',
             ],
+          },
+        ],
+      },
+      {
+        label: 'One-Pager',
+        icon: '📄',
+        sections: [
+          {
+            title: 'Architecture One-Pager',
+            content: 'Full system architecture, data flow, key recommendations, and business impact summary.',
+            bullets: [],
           },
         ],
       },
