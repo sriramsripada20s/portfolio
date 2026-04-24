@@ -101,41 +101,61 @@ export default function ProjectDetail() {
             <div className="space-y-6">
               <div className="border-l-2 border-sky-800/40 pl-6">
                 <h3 className="text-[11px] font-bold text-sky-400 uppercase tracking-widest mb-3">
-                  Live Portfolio Dashboard
+                  {project.liveUrl ? 'Live Dashboard' : 'Demo Coming Soon'}
                 </h3>
                 <p className="text-[14px] text-[#8892a4] leading-relaxed mb-4">
-                  Real production metrics pulled from Snowflake daily via GitHub Actions. Updates automatically at 6 AM UTC — zero live Snowflake hits on page load.
+                  {project.liveUrl
+                    ? 'Real production metrics pulled from Snowflake daily via GitHub Actions. Updates automatically at 6 AM UTC — zero live Snowflake hits on page load.'
+                    : 'A live Streamlit demo is in development — type any business question in plain English and watch the agent translate it to SQL, execute on Snowflake, and return a structured answer in real time.'}
                 </p>
                 <ul className="space-y-2.5 mb-6">
-                  {[
+                  {(project.liveUrl ? [
                     'Real Snowflake data — 50,000 customers, $224M revenue tracked',
                     'Auto-updates daily — GitHub Actions queries Snowflake once, writes static JSON',
                     'Zero live Snowflake hits on page load — static file pattern for performance',
                     '4 metric tabs — Customer, Revenue, Risk & Fraud, Engagement',
-                  ].map((b, bi) => (
+                  ] : [
+                    'Ask questions like "what is the churn rate for gold tier customers last 30 days?"',
+                    'Agent generates SQL, executes on Snowflake, returns data + narrative answer',
+                    'Full query history and SQL transparency — see exactly what ran',
+                    'Streamlit Cloud deployment — no login required, publicly accessible',
+                  ]).map((b, bi) => (
                     <li key={bi} className="flex items-start gap-3 text-[13px] text-[#8892a4] leading-relaxed">
                       <span className="text-sky-500 mt-0.5 flex-shrink-0">→</span>{b}
                     </li>
                   ))}
                 </ul>
-                <a
-                  href="https://sriramsripada20s.github.io/customer-360-snowflake-dbt"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 text-[13px] font-semibold text-sky-400 border border-sky-800/40 bg-sky-950/50 px-4 py-2.5 rounded-lg hover:bg-sky-900/40 transition-colors mb-6"
-                >
-                  <ExternalLink size={13} /> Open live dashboard ↗
-                </a>
+                {project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 text-[13px] font-semibold text-sky-400 border border-sky-800/40 bg-sky-950/50 px-4 py-2.5 rounded-lg hover:bg-sky-900/40 transition-colors mb-6"
+                  >
+                    <ExternalLink size={13} /> Open live dashboard ↗
+                  </a>
+                )}
               </div>
-              <div className="rounded-xl overflow-hidden border border-[#232d3f]" style={{ height: '600px' }}>
-                <iframe
-                  src="https://sriramsripada20s.github.io/customer-360-snowflake-dbt"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 'none', background: '#080C10' }}
-                  title="Customer 360 Live Dashboard"
-                />
-              </div>
+
+              {project.liveUrl ? (
+                <div className="rounded-xl overflow-hidden border border-[#232d3f]" style={{ height: '600px' }}>
+                  <iframe
+                    src={project.liveUrl}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 'none', background: '#080C10' }}
+                    title="Live Dashboard"
+                  />
+                </div>
+              ) : (
+                <div className="rounded-xl border border-[#232d3f] bg-[#0D1117] flex flex-col items-center justify-center gap-4" style={{ height: '300px' }}>
+                  <div style={{ fontSize: '40px' }}>🚧</div>
+                  <p className="text-[14px] font-semibold text-white">Streamlit demo in development</p>
+                  <p className="text-[12px] text-[#6B7280] text-center max-w-sm">
+                    Will be deployed on Streamlit Cloud — publicly accessible, no login required. Check back soon.
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             <div className="space-y-10">
